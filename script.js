@@ -8,22 +8,20 @@ const  loader = document.getElementById('loader');
 //Global variable
 let apiQuotes = [];
 
-//Show Loading
-function loading(){
+function showLoadingSpinner(){
     //We dont want it to be hidden
     loader.hidden = false;
     quoteContainer.hidden = true;
 }
 
-//Complete, hide loading
-function complete(){
+function removeLoadingSpinner(){
     quoteContainer.hidden = false;
     loader.hidden = true;
 }
 
 //Show New Quote
 function newQuote(){
-    loading();
+    showLoadingSpinner();
     // Pick a random quote from API
     //apiQuotes[random number];
     const quote = apiQuotes[Math.floor(Math.random() * apiQuotes.length)];
@@ -46,11 +44,11 @@ function newQuote(){
     // Set Quote, Hide Loader
     quoteText.textContent = quote.text;
     //Once you've got the data , show it
-    complete();
+    removeLoadingSpinner();
 }
 // Get Quotes From API
     async function getQuotes() {
-        loading();
+        showLoadingSpinner();
         const apiUrl = 'https://jacintodesign.github.io/quotes-api/data/quotes.json';
         try {
             //we set response when we actually have data
@@ -58,8 +56,14 @@ function newQuote(){
             apiQuotes = await response.json(); //array of objects
             //console.log(apiQuotes);
             newQuote();
+            throw new Error();
         }catch(error){
             //Catch Error Here
+            //recursive funcion getQuote();
+            quoteText.textContent = 'This service is not available at the moment';
+            authorText.textContent = '';
+            twitterBtn.hidden = true;
+            newQuoteBtn.hidden = true;
         }
     }
 //Tweet Quote
